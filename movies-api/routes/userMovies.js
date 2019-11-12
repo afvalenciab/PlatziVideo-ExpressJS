@@ -30,7 +30,6 @@ const userMoviesApi = (app) => {
 
   router.post('/', passport.authenticate('jwt', { session: false}), scopesValidationHandler(['create:user-movies']), validationHandler(createUserMovieSchema), async (req, res, next) => {
     const { body: userMovie } = req;
-
     try {
       const createdUserMovieId = await userMoviesService.createUserMovie({
         userMovie
@@ -45,7 +44,7 @@ const userMoviesApi = (app) => {
     }
   });
 
-  router.delete('/:userMovieId', passport.authenticate('jwt', { session: false}),  scopesValidationHandler(['delete:user-movies']), validationHandler({ userMovieId: userMovieIdSchema }, 'params'), async (req, res, next) => {
+  router.delete('/:userMovieId', passport.authenticate('jwt', { session: false}),  scopesValidationHandler(['delete:user-movies']), async (req, res, next) => {
     const { userMovieId } = req.params;
 
     try {
