@@ -1,9 +1,10 @@
 const express = require('express');
+const joi = require('@hapi/joi');
 const UserMoviesService = require('../services/userMovies');
 const validationHandler = require('../utils/middleware/validationHandler');
 const scopesValidationHandler = require('../utils/middleware/scopesValidationHandler');
 const { userIdSchema } = require('../utils/schemas/users');
-const { createUserMovieSchema, userMovieIdSchema } = require('../utils/schemas/userMovies');
+const { createUserMovieSchema } = require('../utils/schemas/userMovies');
 const passport = require('passport');
 require('../utils/auth/strategies/jwt');
 
@@ -13,7 +14,7 @@ const userMoviesApi = (app) => {
 
   const userMoviesService = new UserMoviesService();
 
-  router.get('/', passport.authenticate('jwt', { session: false}),  scopesValidationHandler(['read:user-movies']), validationHandler({ userId: userIdSchema }, 'query'), async (req, res, next) => {
+  router.get('/', passport.authenticate('jwt', { session: false}),  scopesValidationHandler(['read:user-movies']), validationHandler(joi.object({ userId: userIdSchema }), 'query'), async (req, res, next) => {
     const { userId } = req.query;
 
     try {
